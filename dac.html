@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linked List Insertion Sort</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 2rem;
+      text-align: center;
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.5rem;
+    }
+    .list {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Linked List Insertion Sort</h1>
+
+  <input type="number" id="numberInput" placeholder="Enter number" />
+  <button onclick="addNode()">Add to List</button>
+  <button onclick="sortList()">Sort List</button>
+
+  <div class="list" id="listDisplay">Linked List: None</div>
+  <div class="list" id="sortedDisplay"></div>
+
+  <script>
+    class Node {
+      constructor(data) {
+        this.data = data;
+        this.next = null;
+      }
+    }
+
+    class LinkedList {
+      constructor() {
+        this.head = null;
+      }
+
+      insertAtEnd(data) {
+        const newNode = new Node(data);
+        if (!this.head) {
+          this.head = newNode;
+        } else {
+          let temp = this.head;
+          while (temp.next) {
+            temp = temp.next;
+          }
+          temp.next = newNode;
+        }
+      }
+
+      printList() {
+        let result = '';
+        let temp = this.head;
+        while (temp) {
+          result += temp.data + ' -> ';
+          temp = temp.next;
+        }
+        return result + 'None';
+      }
+
+      insertionSort() {
+        let sorted = null;
+        let current = this.head;
+
+        while (current) {
+          let next = current.next;
+          sorted = this.sortedInsert(sorted, current);
+          current = next;
+        }
+        this.head = sorted;
+      }
+
+      sortedInsert(head, node) {
+        if (!head || node.data < head.data) {
+          node.next = head;
+          return node;
+        }
+        let current = head;
+        while (current.next && current.next.data < node.data) {
+          current = current.next;
+        }
+        node.next = current.next;
+        current.next = node;
+        return head;
+      }
+    }
+
+    const list = new LinkedList();
+
+    function addNode() {
+      const input = document.getElementById('numberInput');
+      const value = parseInt(input.value);
+      if (!isNaN(value)) {
+        list.insertAtEnd(value);
+        document.getElementById('listDisplay').innerText = 'Linked List: ' + list.printList();
+        input.value = '';
+      }
+    }
+
+    function sortList() {
+      list.insertionSort();
+      document.getElementById('sortedDisplay').innerText = 'Sorted List: ' + list.printList();
+    }
+  </script>
+</body>
+</html>
